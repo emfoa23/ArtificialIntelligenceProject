@@ -79,3 +79,5 @@ while text_input != 'F' and text_input != 'f' and text_input != 'S' and text_inp
         print("Wrong Input. Please try it again.")
 while on_going:
     map, turn = showing(map, turn)
+
+#병수가 수정함
