@@ -1,4 +1,8 @@
-def showing(map, turn): #착수 함수
+#import
+from random import randint
+
+#착수 함수
+def showing(map, turn):
     human_bet = 0
     alphabet = ''
     last_betting_point = [0] * 2
@@ -6,6 +10,7 @@ def showing(map, turn): #착수 함수
     if turn == 1:   #사람 차례
         while human_bet != '1' and human_bet != '2' and human_bet != '3' and human_bet != '4' and human_bet != '5' and human_bet != '6' and human_bet != '7':
             human_bet = input("Where do you want to bet? (1~7) : ")
+            # human_bet = str(randint(1, 7))
             if human_bet != '1' and human_bet != '2' and human_bet != '3' and human_bet != '4' and human_bet != '5' and human_bet != '6' and human_bet != '7':
                 print("Wrong Input. Please try it again.")
             else:
@@ -14,11 +19,14 @@ def showing(map, turn): #착수 함수
                         map[i][int(human_bet)-1] = 1
                         last_betting_point[0] = i
                         last_betting_point[1] = int(human_bet)-1  #마지막 착수점 저장
+                        print(last_betting_point)
                         break
-                break
+                    else:
+                        print("The column is full. Please select another column.")
     elif turn == -1:  #컴퓨터 차례
+        cpu_bet = randint(0, 6)
+        # cpu_bet = 6
         for i in range(6):
-            cpu_bet = 3
             if map[i][cpu_bet] == 0:
                 map[i][cpu_bet] = -1
                 last_betting_point[0] = i
@@ -36,7 +44,7 @@ def showing(map, turn): #착수 함수
                 else:
                     alphabet = 'F'
                 break
-        print("CPU betted",alphabet+str(3))
+        print("CPU betted",alphabet+str(cpu_bet))
     for i in range(6):
         for j in range(7):
             if map[i][j] == 1:
@@ -60,7 +68,7 @@ def showing(map, turn): #착수 함수
     turn *= -1  #턴 바꾸기
     return map, turn, last_betting_point    #맵, 누구턴인지, 마지막 착수점 리턴
 
-
+#가로로 빙고가 존재하는지 확인하는 함수
 def checkHorizontalClear(map, last_betting_point):
     column = last_betting_point[0]
     row = last_betting_point[1]
@@ -70,17 +78,20 @@ def checkHorizontalClear(map, last_betting_point):
         return False
     elif (map[column][row-1] != map[column][row]) and (map[column][row+1] != map[column][row]):
         return False
-    elif (map[column][row-1] == map[column][row]) and  (map[column][row+1] != map[column][row]):
-        if (map[column][row-2] != map[column][row]) or (map[column][row-3] != map[column][row]):
+    elif (map[column][row-1] == map[column][row]) and ((row + 1 > 6) or (map[column][row+1] != map[column][row])):
+        if (row - 3 < 0) or (map[column][row-2] != map[column][row]) or (map[column][row-3] != map[column][row]):
             return False
-    elif (map[column][row-1] != map[column][row]) and  (map[column][row+1] == map[column][row]):
-        if (map[column][row+2] != map[column][row]) or (map[column][row+3] != map[column][row]):
+    # elif ((row - 1 < 0) or (map[column][row-1] != map[column][row])) and (map[column][row+1] == map[column][row]):
+    elif (map[column][row - 1] != map[column][row]) and (map[column][row + 1] == map[column][row]):
+        if (row + 3 > 6) or (map[column][row+2] != map[column][row]) or (map[column][row+3] != map[column][row]):
             return False
     else:
-        if (map[column][row-2] != map[column][row]) and (map[column][row+2] != map[column][row]):
+        if ((row - 2 < 0) or (map[column][row-2] != map[column][row])) and ((row + 2 > 6) or (map[column][row+2] != map[column][row])):
             return False
     print("가로 빙고")
     return True
+
+#세로로 빙고가 존재하는지 확인하는 함수
 def checkVerticalClear(map, last_betting_point):
     column = last_betting_point[0]
     row = last_betting_point[1]
@@ -90,70 +101,94 @@ def checkVerticalClear(map, last_betting_point):
         return False
     elif (map[column-1][row] != map[column][row]) and (map[column+1][row] != map[column][row]):
         return False
-    elif (map[column-1][row] == map[column][row]) and (map[column+1][row] != map[column][row]):
-        if (map[column-2][row] != map[column][row]) or (map[column-3][row] != map[column][row]):
+    elif (map[column-1][row] == map[column][row]) and ((column + 1 > 5) or (map[column+1][row] != map[column][row])):
+        if (column - 3 < 0) or (map[column-2][row] != map[column][row]) or (map[column-3][row] != map[column][row]):
             return False
-    elif (map[column-1][row] != map[column][row]) and (map[column+1][row] == map[column][row]):
-        if (map[column+2][row] != map[column][row]) or (map[column+3][row] != map[column][row]):
+    elif ((column - 1 < 0) or (map[column-1][row] != map[column][row])) and (map[column+1][row] == map[column][row]):
+        if (column + 3 > 5) or (map[column+2][row] != map[column][row]) or (map[column+3][row] != map[column][row]):
             return False
     else:
-        if (map[column-2][row] != map[column][row]) and (map[column+2][row] != map[column][row]):
+        if ((column - 2 < 0) or (map[column-2][row] != map[column][row])) and ((column + 2 > 5) or (map[column+2][row] != map[column][row])):
             return False
     print("세로 빙고")
     return True
+
+#왼쪽 대각선으로 빙고가 존재하는지 확인하는 함수
 def checkLeftDiagonalClear(map, last_betting_point):
     column = last_betting_point[0]
     row = last_betting_point[1]
-    if ((column-2 < 0) or (row + 2 > 6)) and (map[column+1][row - 1] != map[column][row]):
+    if ((column-2 < 0) or (row + 2 > 6)) and ((column+2 > 5) or (row - 2 < 0)):
+        return False
+    elif ((column-2 < 0) or (row + 2 > 6)) and (map[column+1][row - 1] != map[column][row]):
         return False
     elif ((column+2 > 5) or (row - 2 < 0)) and (map[column-1][row + 1] != map[column][row]):
         return False
     elif (map[column+1][row - 1] != map[column][row]) and (map[column-1][row + 1] != map[column][row]):
         return False
-    elif (map[column+1][row - 1] == map[column][row]) and (map[column-1][row + 1] != map[column][row]):
+    elif (map[column+1][row - 1] == map[column][row]) and (() or (map[column-1][row + 1] != map[column][row])):
         if (map[column+2][row - 2] != map[column][row]) or (map[column+3][row - 3] != map[column][row]):
             return False
-    elif (map[column+1][row - 1] != map[column][row]) and (map[column-1][row + 1] == map[column][row]):
+    elif (map[column+1][row - 1] != map[column][row]) and (() or (map[column-1][row + 1] == map[column][row])):
         if (map[column-2][row + 2] != map[column][row]) or (map[column-3][row + 3] != map[column][row]):
             return False
     else:
-        if (map[column+2][row - 2] != map[column][row]) and (map[column+2][row - 2] != map[column][row]):
+        if ((column+2 > 5) or (row - 2 < 0) or (map[column+2][row - 2] != map[column][row])) and ((column+2 > 5) or (row - 2 < 0) or (map[column+2][row - 2] != map[column][row])):
             return False
     print("왼쪽 대각 빙고")
     return True
+
+#오른쪽 대각선으로 빙고가 존재하는지 확인하는 함수
 def checkRightDiagonalClear(map, last_betting_point):
     column = last_betting_point[0]
     row = last_betting_point[1]
-    if ((column - 2 < 0) or (row - 2 < 0)) and (map[column + 1][row + 1] != map[column][row]):
+    if((column - 2 < 0) or (row - 2 < 0)) and ((column + 2 > 5) or (row + 2 > 6)):
+        return False
+    elif ((column - 2 < 0) or (row - 2 < 0)) and (map[column + 1][row + 1] != map[column][row]):
         return False
     elif ((column + 2 > 5) or (row + 2 > 6)) and (map[column - 1][row - 1] != map[column][row]):
         return False
     elif (map[column - 1][row - 1] != map[column][row]) and (map[column + 1][row + 1] != map[column][row]):
         return False
-    elif (map[column - 1][row - 1] == map[column][row]) and (map[column + 1][row + 1] != map[column][row]):
+    elif (map[column - 1][row - 1] == map[column][row]) and ((column + 1 > 5) or (row + 1 > 6) or (map[column + 1][row + 1] != map[column][row])):
         if (map[column - 2][row - 2] != map[column][row]) or (map[column - 3][row - 3] != map[column][row]):
             return False
-    elif (map[column - 1][row - 1] != map[column][row]) and (map[column + 1][row + 1] == map[column][row]):
+    elif (map[column - 1][row - 1] != map[column][row]) and ((column + 1 > 5) or (row + 1 > 6) or (map[column + 1][row + 1] == map[column][row])):
         if (map[column + 2][row + 2] != map[column][row]) or (map[column + 3][row + 3] != map[column][row]):
             return False
     else:
-        if (map[column - 2][row - 2] != map[column][row]) and (map[column + 2][row + 2] != map[column][row]):
+        if ((column - 2 < 0) or (row - 2 < 0) or (map[column - 2][row - 2] != map[column][row])) and ((column + 2 > 5) or (row + 2 > 6) or (map[column + 2][row + 2] != map[column][row])):
             return False
     print("오른쪽 대각 빙고")
     return True
 
-def gameOver(map, last_betting_point):  #게임오버 인지 확인하는 함수
-    if checkHorizontalClear(map, last_betting_point):
-        return True
-    elif checkVerticalClear(map, last_betting_point):
-        return True
-    elif checkLeftDiagonalClear(map, last_betting_point):
-        return True
-    elif checkRightDiagonalClear(map, last_betting_point):
-        return True
-    else:
-        return False
+#게임판이 꽉 찼는지 확인하는 함수
+def checkMapIsFull(map):
+    for i in range(6):
+        for j in range(7):
+            if map[i][j] == 0:
+                return False
+    return True
 
+#게임오버 인지 확인하는 함수
+def gameOver(map, last_betting_point, turn):
+    winner = None
+    if checkHorizontalClear(map, last_betting_point):
+        winner = turn * -1
+        return True, winner
+    elif checkVerticalClear(map, last_betting_point):
+        winner = turn * -1
+        return True, winner
+    # elif checkLeftDiagonalClear(map, last_betting_point):
+    #     winner = turn * -1
+    #     return True, winner
+    # elif checkRightDiagonalClear(map, last_betting_point):
+    #     winner = turn * -1
+    #     return True, winner
+    elif checkMapIsFull(map):
+        winner = 0
+        return True, winner
+    else:
+        return False, winner
 
 #메인 함수
 print()
@@ -192,13 +227,16 @@ while text_input != 'F' and text_input != 'f' and text_input != 'S' and text_inp
         print("Wrong Input. Please try it again.")
 while on_going: #게임 진행 함수
     map, turn, last_betting_point = showing(map, turn)
-    if gameOver(map, last_betting_point):   #게임이 끝나면 누가 이겼는지 출력
+    game_over, winner = gameOver(map, last_betting_point, turn)
+    if game_over:   #게임이 끝나면 누가 이겼는지 출력
         print()
         print("-----------------------------")
         print("--------- Game Over ---------")
-        if turn == 1:
+        if winner == 1:
+            print("---------- You Win ----------")
+        elif winner == -1:
             print("---------- CPU Win ----------")
         else:
-            print("---------- You Win ----------")
+            print("----------- Draw! -----------")
         print("-----------------------------")
-        break
+        # break
