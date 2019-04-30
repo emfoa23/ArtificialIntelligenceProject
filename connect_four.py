@@ -1,7 +1,8 @@
-def showing(map, turn):
+def showing(map, turn): #착수 함수
     bet = 0
     alphabet = ''
-    if turn == 1:
+    last_betting_point = [0] * 2
+    if turn == 1:   #사람 차례
         while bet != '1' and bet != '2' and bet != '3' and bet != '4' and bet != '5' and bet != '6' and bet != '7':
             bet = input("Where do you want to bet? (1~7) : ")
             if bet != '1' and bet != '2' and bet != '3' and bet != '4' and bet != '5' and bet != '6' and bet != '7':
@@ -10,12 +11,15 @@ def showing(map, turn):
                 for i in range(6):
                     if map[i][int(bet)-1] == '.':
                         map[i][int(bet)-1] = '○'
+                        last_betting_point[0] = i
+                        last_betting_point[1] = int(bet)-1  #마지막 착수점 저장
                         break
                 break
-    if turn == -1:
+    if turn == -1:  #컴퓨터 차례
         for i in range(6):
-            if map[i][3] == '.':
-                map[i][3] = '●'
+            cpu_bet = 3
+            if map[i][cpu_bet] == '.':
+                map[i][cpu_bet] = '●'
                 if i == 0:
                     alphabet = 'A'
                 elif i == 1:
@@ -43,6 +47,9 @@ def showing(map, turn):
     print("You: ○ , CPU: ●")
     turn *= -1
     return map, turn
+
+def gameOver(map):
+    return True
 
 print()
 print("------------------------------")
@@ -79,3 +86,6 @@ while text_input != 'F' and text_input != 'f' and text_input != 'S' and text_inp
         print("Wrong Input. Please try it again.")
 while on_going:
     map, turn = showing(map, turn)
+    if gameOver(map):
+        print("Game Over.")
+        break
