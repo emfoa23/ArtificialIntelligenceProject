@@ -6,3 +6,6 @@ Python을 이용해 개발했습니다.
 ## Team Member
 * 안병욱 (고려대학교 컴퓨터학과)
 * 최병수 (고려대학교 컴퓨터학과)
+## Reference
+* [Connect Four - Wikipedia](https://en.wikipedia.org/wiki/Connect_Four)
+* [Solving Connect Four - How to build a perfect AI](http://blog.gamesolver.org)
