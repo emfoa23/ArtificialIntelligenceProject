@@ -1,16 +1,12 @@
-#import
+# Import
 from random import randint
 
-#착수 함수
-def showing(map, turn):
+# 선택한 열에 착수하는 함수
+def betting(turn, map):
     human_bet = 0
-    alphabet = ''
-    last_betting_point = [0] * 2
-    dot = [['.'] * 7 for i in range(6)]
-    if turn == 1:   #사람 차례
+    if turn == 1:   # 사람 차례
         while human_bet != '1' and human_bet != '2' and human_bet != '3' and human_bet != '4' and human_bet != '5' and human_bet != '6' and human_bet != '7':
             human_bet = input("Where do you want to bet? (1~7) : ")
-            # human_bet = str(randint(1, 7))
             if human_bet != '1' and human_bet != '2' and human_bet != '3' and human_bet != '4' and human_bet != '5' and human_bet != '6' and human_bet != '7':
                 print("Wrong Input. Please try it again.")
             else:
@@ -20,9 +16,42 @@ def showing(map, turn):
                         last_betting_point[0] = i
                         last_betting_point[1] = int(human_bet)-1  #마지막 착수점 저장
                         print(last_betting_point)
-                        break
+                        return map, True, last_betting_point
                     else:
-                        print("The column is full. Please select another column.")
+                        if i == 5:
+                            print("The column is full. Please select another column.")
+                            return map, False
+
+# 착수할 열을 선택하고 착수 결과를 보여주는 함수
+def showing(map, turn):
+    human_bet = 0
+    alphabet = ''
+    last_betting_point = [0] * 2
+    dot = [['.'] * 7 for i in range(6)]
+    while not betting(turn, map):
+        betting(turn, map)
+
+    # if turn == 1:   #사람 차례
+    #     while human_bet != '1' and human_bet != '2' and human_bet != '3' and human_bet != '4' and human_bet != '5' and human_bet != '6' and human_bet != '7':
+    #         human_bet = input("Where do you want to bet? (1~7) : ")
+    #
+    #         # 테스트용 코드
+    #         # human_bet = str(randint(1, 7))    # 사람 차례에도 랜덤하게 두기
+    #
+    #         if human_bet != '1' and human_bet != '2' and human_bet != '3' and human_bet != '4' and human_bet != '5' and human_bet != '6' and human_bet != '7':
+    #             print("Wrong Input. Please try it again.")
+    #         else:
+    #             for i in range(6):
+    #                 if map[i][int(human_bet)-1] == 0:
+    #                     map[i][int(human_bet)-1] = 1
+    #                     last_betting_point[0] = i
+    #                     last_betting_point[1] = int(human_bet)-1  #마지막 착수점 저장
+    #                     print(last_betting_point)
+    #                     break
+    #                 else:
+    #                     if i == 5:
+    #                         print("The column is full. Please select another column.")
+
     elif turn == -1:  #컴퓨터 차례
         cpu_bet = randint(0, 6)
         # cpu_bet = 6
@@ -172,23 +201,26 @@ def checkMapIsFull(map):
 #게임오버 인지 확인하는 함수
 def gameOver(map, last_betting_point, turn):
     winner = None
-    if checkHorizontalClear(map, last_betting_point):
-        winner = turn * -1
-        return True, winner
-    elif checkVerticalClear(map, last_betting_point):
-        winner = turn * -1
-        return True, winner
+    # if checkHorizontalClear(map, last_betting_point):
+    #     winner = turn * -1
+    #     return True, winner
+    # elif checkVerticalClear(map, last_betting_point):
+    #     winner = turn * -1
+    #     return True, winner
     # elif checkLeftDiagonalClear(map, last_betting_point):
     #     winner = turn * -1
     #     return True, winner
     # elif checkRightDiagonalClear(map, last_betting_point):
     #     winner = turn * -1
     #     return True, winner
-    elif checkMapIsFull(map):
-        winner = 0
-        return True, winner
-    else:
-        return False, winner
+    # elif checkMapIsFull(map):
+    #     winner = 0
+    #     return True, winner
+    # else:
+    #     return False, winner
+
+    # 테스트용 코드
+    return False, winner    # 무조건 게임 진행
 
 # 게임 실행 함수
 def startGame():
