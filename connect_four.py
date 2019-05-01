@@ -5,7 +5,9 @@ from random import randint
 def betting(turn, map):
     human_bet = 0
     last_betting_point = [-1] * 2
-    if turn == 1:   # 사람 차례
+    available_betting_point_address = [[0,1],[0,2],[0,3],[0,4],[0,5],[0,6],[0,7]]
+    # 사람 차례
+    if turn == 1:
         while human_bet != '1' and human_bet != '2' and human_bet != '3' and human_bet != '4' and human_bet != '5' and human_bet != '6' and human_bet != '7':
             human_bet = input("Where do you want to bet? (1~7) : ")
 
@@ -15,60 +17,91 @@ def betting(turn, map):
             if human_bet != '1' and human_bet != '2' and human_bet != '3' and human_bet != '4' and human_bet != '5' and human_bet != '6' and human_bet != '7':
                 print("Wrong Input. Please try it again.")
             else:
-                for i in range(6):
-                    if map[i][int(human_bet)-1] == 0:
-                        map[i][int(human_bet)-1] = 1
+                for point in available_betting_point_address:
+                    if int(human_bet) in point[1]:
+                        map[point[0]][int(human_bet)-1] = 1
+                        # 마지막 착수점 저장
                         last_betting_point[0] = i
-                        last_betting_point[1] = int(human_bet)-1  #마지막 착수점 저장
-
-                        # 테스트용 코드
-                        # print(last_betting_point)   # 마지막 착수점 출력
-
+                        last_betting_point[1] = int(human_bet) - 1
                         return map, True, last_betting_point
-                    else:
-                        if i == 5:
-                            print("Column "+human_bet+" is already full. Please select another column.")
-                            return map, False, last_betting_point
-    else:   # 컴퓨터 차례
+                print("Column " + human_bet + " is already full. Please select another column.")
+                return map, False, last_betting_point
+
+                # if int(human_bet) in available_betting_point_address:
+                #     map[i][int(human_bet) - 1] = 1
+                #     last_betting_point[0] = i
+                #     last_betting_point[1] = int(human_bet)-1  #마지막 착수점 저장
+                #     return map, True, last_betting_point
+                # else:
+                #     print("Column " + human_bet + " is already full. Please select another column.")
+                #     return map, False, last_betting_point
+
+                # for i in range(6):
+                #     if map[i][int(human_bet)-1] == 0:
+                #         map[i][int(human_bet)-1] = 1
+                #         last_betting_point[0] = i
+                #         last_betting_point[1] = int(human_bet)-1  #마지막 착수점 저장
+                #
+                #         # 테스트용 코드
+                #         # print(last_betting_point)   # 마지막 착수점 출력
+                #
+                #         return map, True, last_betting_point
+                #     else:
+                #         if i == 5:
+                #             print("Column "+human_bet+" is already full. Please select another column.")
+                #             return map, False, last_betting_point
+    # 컴퓨터 차례
+    else:
         cpu_input = -1
         while cpu_input != '0' and cpu_input != '1':
             cpu_input = input("Choose betting method CPU should select. (0 - random / 1 - heuristic): ")
             if int(cpu_input) == 0:
-                cpu_bet = randint(0, 6) # 1~7열 사이에 랜덤하게 착수하기
+                # 1~7열 사이에 랜덤하게 착수하기
+                random_variable = randint(0, len(available_betting_point_address))
+                cpu_bet_row = available_betting_point_address[random_variable][0]
+                cpu_bet_column = available_betting_point_address[random_variable][1]
             elif int(cpu_input) == 1:
-                cpu_bet = randint(0, 6) # 1~7열 사이에 랜덤하게 착수하기
+                # 1~7열 사이에 랜덤하게 착수하기
+                random_variable = randint(0, len(available_betting_point_address))
+                cpu_bet_row = available_betting_point_address[random_variable][0]
+                cpu_bet_column = available_betting_point_address[random_variable][1]
             else:
                 print("Wrong Input. Please try it again.")
-        for i in range(6):
-            if map[i][cpu_bet] == 0:
-                map[i][cpu_bet] = -1
-                last_betting_point[0] = i
-                last_betting_point[1] = cpu_bet
-
-                # 테스트용 코드
-                # print(last_betting_point)   # 마지막 착수점 출력
-
-                if i == 0:
-                    alphabet = 'A'
-                elif i == 1:
-                    alphabet = 'B'
-                elif i == 2:
-                    alphabet = 'C'
-                elif i == 3:
-                    alphabet = 'D'
-                elif i == 4:
-                    alphabet = 'E'
-                else:
-                    alphabet = 'F'
-                print("( CPU betted",alphabet+str(cpu_bet+1),")")
-                return map, True, last_betting_point
-            else:
-                if i == 5:
-
-                    # 테스트용 코드
-                    # print("Column "+str(cpu_bet+1)+" is already full. Please select another column.")   # 컴퓨터가 두려는 열이 꽉찼음을 출력
-
-                    return map, False, last_betting_point
+        map[cpu_bet_row][cpu_bet_column] = -1
+        # 마지막 착수점 저장
+        last_betting_point[0] = cpu_bet_row
+        last_betting_point[1] = cpu_bet_column - 1
+        return map, True, last_betting_point
+        # for i in range(6):
+        #     if map[i][cpu_bet] == 0:
+        #         map[i][cpu_bet] = -1
+        #         last_betting_point[0] = i
+        #         last_betting_point[1] = cpu_bet
+        #
+        #         # 테스트용 코드
+        #         # print(last_betting_point)   # 마지막 착수점 출력
+        #
+        #         if i == 0:
+        #             alphabet = 'A'
+        #         elif i == 1:
+        #             alphabet = 'B'
+        #         elif i == 2:
+        #             alphabet = 'C'
+        #         elif i == 3:
+        #             alphabet = 'D'
+        #         elif i == 4:
+        #             alphabet = 'E'
+        #         else:
+        #             alphabet = 'F'
+        #         print("( CPU betted",alphabet+str(cpu_bet+1),")")
+        #         return map, True, last_betting_point
+        #     else:
+        #         if i == 5:
+        #
+        #             # 테스트용 코드
+        #             # print("Column "+str(cpu_bet+1)+" is already full. Please select another column.")   # 컴퓨터가 두려는 열이 꽉찼음을 출력
+        #
+        #             return map, False, last_betting_point
 
 # 착수할 열을 선택하고 착수 결과를 보여주는 함수
 def gameProgressing(map, turn, state):
