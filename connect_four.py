@@ -190,7 +190,53 @@ def gameOver(map, last_betting_point, turn):
     else:
         return False, winner
 
-#메인 함수
+# 게임 실행 함수
+def startGame():
+    text_input = ''
+    turn = 0
+    map = [[0] * 7 for i in range(6)]
+    last_betting_point = [0] * 2
+    while text_input != 'F' and text_input != 'f' and text_input != 'S' and text_input != 's':
+        text_input = input("Will you go First or Second? (F/S) : ")
+        if text_input == 'F' or text_input == 'f':
+            print()
+            print("# 1 2 3 4 5 6 7 #")
+            print('F . . . . . . . #')
+            print('E . . . . . . . #')
+            print('D . . . . . . . #')
+            print('C . . . . . . . #')
+            print('B . . . . . . . #')
+            print('A . . . . . . . #')
+            print("# # # # # # # # #")
+            print()
+            print("You go First.")
+            turn = 1
+            break
+        elif text_input == 'S' or text_input == 's':
+            print("CPU go First.")
+            turn = -1
+            break
+        else:
+            print("Wrong Input. Please try it again.")
+    while True: #게임 진행 함수
+        map, turn, last_betting_point = showing(map, turn)
+        game_over, winner = gameOver(map, last_betting_point, turn)
+        if game_over:   #게임이 끝나면 누가 이겼는지 출력
+            print()
+            print("-----------------------------")
+            print("--------- Game Over ---------")
+            if winner == 1:
+                print("---------- You Win ----------")
+            elif winner == -1:
+                print("---------- CPU Win ----------")
+            else:
+                print("----------- Draw! -----------")
+            print("-----------------------------")
+            print()
+            break
+
+# 메인 함수
+game_continue = ''
 print()
 print("------------------------------")
 print("Artificial Intellgence Project")
@@ -198,45 +244,22 @@ print("-------- Connect Four --------")
 print("-------- Human vs CPU --------")
 print("------------------------------")
 print()
-text_input = ''
-turn = 0
-map = [[0] * 7 for i in range(6)]
-on_going = True
-last_betting_point = [0] * 2
-while text_input != 'F' and text_input != 'f' and text_input != 'S' and text_input != 's':
-    text_input = input("Will you go First or Second? (F/S) : ")
-    if text_input == 'F' or text_input == 'f':
+startGame()
+while game_continue != 'Y' and game_continue != 'y' and game_continue != 'N' and game_continue != 'n':
+    game_continue = input("Do you want to restart the game? (Y/N) : ")
+    if game_continue == 'Y' or game_continue == 'y':
         print()
-        print("# 1 2 3 4 5 6 7 #")
-        print('F . . . . . . . #')
-        print('E . . . . . . . #')
-        print('D . . . . . . . #')
-        print('C . . . . . . . #')
-        print('B . . . . . . . #')
-        print('A . . . . . . . #')
-        print("# # # # # # # # #")
+        print("------------------------------")
+        print("-------- Game Restart --------")
+        print("------------------------------")
         print()
-        print("You go First.")
-        turn = 1
-        break
-    elif text_input == 'S' or text_input == 's':
-        print("CPU go First.")
-        turn = -1
+        startGame()
+    elif game_continue == 'N' or game_continue == 'n':
+        print()
+        print("------------------------------")
+        print("--- Game Engine Terminated ---")
+        print("------------------------------")
+        print()
         break
     else:
         print("Wrong Input. Please try it again.")
-while on_going: #게임 진행 함수
-    map, turn, last_betting_point = showing(map, turn)
-    game_over, winner = gameOver(map, last_betting_point, turn)
-    if game_over:   #게임이 끝나면 누가 이겼는지 출력
-        print()
-        print("-----------------------------")
-        print("--------- Game Over ---------")
-        if winner == 1:
-            print("---------- You Win ----------")
-        elif winner == -1:
-            print("---------- CPU Win ----------")
-        else:
-            print("----------- Draw! -----------")
-        print("-----------------------------")
-        # break
