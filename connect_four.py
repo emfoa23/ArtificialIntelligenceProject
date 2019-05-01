@@ -4,9 +4,14 @@ from random import randint
 # 선택한 열에 착수하는 함수
 def betting(turn, map):
     human_bet = 0
+    last_betting_point = [-1] * 2
     if turn == 1:   # 사람 차례
         while human_bet != '1' and human_bet != '2' and human_bet != '3' and human_bet != '4' and human_bet != '5' and human_bet != '6' and human_bet != '7':
             human_bet = input("Where do you want to bet? (1~7) : ")
+
+            # 테스트용 코드
+            # human_bet = str(randint(1, 7))    # 사람 차례에도 랜덤하게 두기
+
             if human_bet != '1' and human_bet != '2' and human_bet != '3' and human_bet != '4' and human_bet != '5' and human_bet != '6' and human_bet != '7':
                 print("Wrong Input. Please try it again.")
             else:
@@ -15,51 +20,30 @@ def betting(turn, map):
                         map[i][int(human_bet)-1] = 1
                         last_betting_point[0] = i
                         last_betting_point[1] = int(human_bet)-1  #마지막 착수점 저장
-                        print(last_betting_point)
+
+                        # 테스트용 코드
+                        # print(last_betting_point)   # 마지막 착수점 출력
+
                         return map, True, last_betting_point
                     else:
                         if i == 5:
-                            print("The column is full. Please select another column.")
-                            return map, False
+                            print("Column "+human_bet+" is already full. Please select another column.")
+                            return map, False, last_betting_point
+    else:   # 컴퓨터 차례
 
-# 착수할 열을 선택하고 착수 결과를 보여주는 함수
-def showing(map, turn):
-    human_bet = 0
-    alphabet = ''
-    last_betting_point = [0] * 2
-    dot = [['.'] * 7 for i in range(6)]
-    while not betting(turn, map):
-        betting(turn, map)
+        # 테스트용 코드
+        cpu_bet = randint(0, 6) # 1~7열 사이에 랜덤하게 착수하기
+        # cpu_bet = 6   # 6열에만 수 두기
 
-    # if turn == 1:   #사람 차례
-    #     while human_bet != '1' and human_bet != '2' and human_bet != '3' and human_bet != '4' and human_bet != '5' and human_bet != '6' and human_bet != '7':
-    #         human_bet = input("Where do you want to bet? (1~7) : ")
-    #
-    #         # 테스트용 코드
-    #         # human_bet = str(randint(1, 7))    # 사람 차례에도 랜덤하게 두기
-    #
-    #         if human_bet != '1' and human_bet != '2' and human_bet != '3' and human_bet != '4' and human_bet != '5' and human_bet != '6' and human_bet != '7':
-    #             print("Wrong Input. Please try it again.")
-    #         else:
-    #             for i in range(6):
-    #                 if map[i][int(human_bet)-1] == 0:
-    #                     map[i][int(human_bet)-1] = 1
-    #                     last_betting_point[0] = i
-    #                     last_betting_point[1] = int(human_bet)-1  #마지막 착수점 저장
-    #                     print(last_betting_point)
-    #                     break
-    #                 else:
-    #                     if i == 5:
-    #                         print("The column is full. Please select another column.")
-
-    elif turn == -1:  #컴퓨터 차례
-        cpu_bet = randint(0, 6)
-        # cpu_bet = 6
         for i in range(6):
             if map[i][cpu_bet] == 0:
                 map[i][cpu_bet] = -1
                 last_betting_point[0] = i
                 last_betting_point[1] = cpu_bet
+
+                # 테스트용 코드
+                # print(last_betting_point)   # 마지막 착수점 출력
+
                 if i == 0:
                     alphabet = 'A'
                 elif i == 1:
@@ -72,8 +56,25 @@ def showing(map, turn):
                     alphabet = 'E'
                 else:
                     alphabet = 'F'
-                break
-        print("CPU betted",alphabet+str(cpu_bet))
+                print("( CPU betted",alphabet+str(cpu_bet+1),")")
+                return map, True, last_betting_point
+            else:
+                if i == 5:
+
+                    # 테스트용 코드
+                    # print("Column "+str(cpu_bet+1)+" is already full. Please select another column.")   # 컴퓨터가 두려는 열이 꽉찼음을 출력
+
+                    return map, False, last_betting_point
+
+# 착수할 열을 선택하고 착수 결과를 보여주는 함수
+def showing(map, turn):
+    success_betting = False
+    dot = [['.'] * 7 for i in range(6)]
+    # print("-------------------------------------------------------")
+    print("---------------------------------------")
+    while not success_betting:
+        map, success_betting, last_betting_point = betting(turn, map)
+
     for i in range(6):
         for j in range(7):
             if map[i][j] == 1:
@@ -220,14 +221,20 @@ def gameOver(map, last_betting_point, turn):
     #     return False, winner
 
     # 테스트용 코드
-    return False, winner    # 무조건 게임 진행
+    # return False, winner    # 무조건 게임 진행
+
+    # 게임판이 꽉 찼으면 비기는 코드
+    if checkMapIsFull(map):
+        winner = 0
+        return True, winner
+    else:
+        return False, winner
 
 # 게임 실행 함수
 def startGame():
     text_input = ''
     turn = 0
     map = [[0] * 7 for i in range(6)]
-    last_betting_point = [0] * 2
     while text_input != 'F' and text_input != 'f' and text_input != 'S' and text_input != 's':
         text_input = input("Will you go First or Second? (F/S) : ")
         if text_input == 'F' or text_input == 'f':
@@ -255,42 +262,43 @@ def startGame():
         game_over, winner = gameOver(map, last_betting_point, turn)
         if game_over:   #게임이 끝나면 누가 이겼는지 출력
             print()
-            print("-----------------------------")
-            print("--------- Game Over ---------")
+            print("---------------------------------------")
+            print("-------------- Game Over --------------")
             if winner == 1:
-                print("---------- You Win ----------")
+                print("--------------- You Win ---------------")
             elif winner == -1:
-                print("---------- CPU Win ----------")
+                print("--------------- CPU Win ---------------")
             else:
-                print("----------- Draw! -----------")
-            print("-----------------------------")
+                print("---------------- Draw! ----------------")
+            print("---------------------------------------")
             print()
             break
 
 # 메인 함수
 game_continue = ''
 print()
-print("------------------------------")
-print("Artificial Intellgence Project")
-print("-------- Connect Four --------")
-print("-------- Human vs CPU --------")
-print("------------------------------")
+print("----------------------------------------")
+print("---- Artificial Intellgence Project ----")
+print("------------- Connect Four -------------")
+print("------------- Human vs CPU -------------")
+print("----------------------------------------")
 print()
 startGame()
 while game_continue != 'Y' and game_continue != 'y' and game_continue != 'N' and game_continue != 'n':
     game_continue = input("Do you want to restart the game? (Y/N) : ")
     if game_continue == 'Y' or game_continue == 'y':
         print()
-        print("------------------------------")
-        print("-------- Game Restart --------")
-        print("------------------------------")
+        print("----------------------------------------")
+        print("------------- Game Restart -------------")
+        print("----------------------------------------")
         print()
+        game_continue = ''
         startGame()
     elif game_continue == 'N' or game_continue == 'n':
         print()
-        print("------------------------------")
-        print("--- Game Engine Terminated ---")
-        print("------------------------------")
+        print("----------------------------------------")
+        print("-------- Game Engine Terminated --------")
+        print("----------------------------------------")
         print()
         break
     else:
