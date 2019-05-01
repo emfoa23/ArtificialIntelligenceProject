@@ -67,14 +67,13 @@ def betting(turn, map):
                     return map, False, last_betting_point
 
 # 착수할 열을 선택하고 착수 결과를 보여주는 함수
-def showing(map, turn):
+def gameProgressing(map, turn, state):
     success_betting = False
     dot = [['.'] * 7 for i in range(6)]
-    # print("-------------------------------------------------------")
     print("---------------------------------------")
     while not success_betting:
         map, success_betting, last_betting_point = betting(turn, map)
-
+    state.append(last_betting_point[1])
     for i in range(6):
         for j in range(7):
             if map[i][j] == 1:
@@ -95,8 +94,11 @@ def showing(map, turn):
     print()
     print("You: ○ , CPU: ●")
 
+    # 테스트용 코드
+    print("State: "+''.join(str(i) for i in state))    # 현재 state 보여주기
+
     turn *= -1  # 턴 바꾸기
-    return map, turn, last_betting_point    # 맵, 누구턴인지, 마지막 착수점 리턴
+    return map, turn, last_betting_point, state    # 맵, 누구턴인지, 마지막 착수점, state 리턴
 
 # 특정 방향에 같은 수가 연속으로 몇개 존재하는지 찾아내는 함수
 def continuousBetting(map, last_betting_point, column_direction, row_direction, count):
@@ -146,6 +148,7 @@ def startGame():
     text_input = ''
     turn = 0
     map = [[0] * 7 for i in range(6)]
+    state = []
     while text_input != 'F' and text_input != 'f' and text_input != 'S' and text_input != 's':
         text_input = input("Will you go First or Second? (F/S) : ")
 
@@ -173,7 +176,7 @@ def startGame():
         else:
             print("Wrong Input. Please try it again.")
     while True: # 게임 진행 함수
-        map, turn, last_betting_point = showing(map, turn)
+        map, turn, last_betting_point, state = gameProgressing(map, turn, state)
         game_over, winner = gameOver(map, last_betting_point, turn)
         if game_over:   # 게임이 끝나면 누가 이겼는지 출력
             print()
