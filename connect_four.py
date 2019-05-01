@@ -73,7 +73,7 @@ def gameProgressing(map, turn, state):
     print("---------------------------------------")
     while not success_betting:
         map, success_betting, last_betting_point = betting(turn, map)
-    state.append(last_betting_point[1])
+    state.append(last_betting_point[1]+1)
     for i in range(6):
         for j in range(7):
             if map[i][j] == 1:
