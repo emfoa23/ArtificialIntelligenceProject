@@ -4,6 +4,8 @@ Artificial Intelligence Connect Four AI Project
 Python을 이용해 개발했습니다.
 ## Enviornment
 * Python 3.7.3
+## Execution
+    python3 connect_four.py
 ## Team Member
 * 안병욱 (고려대학교 컴퓨터학과)
 * 최병수 (고려대학교 컴퓨터학과)
