@@ -22,7 +22,7 @@ def declareAvailableBettingPoint(map, available_betting_point_address, option):
     return new_available_betting_point_address, option
 
 # 선택한 열에 착수하는 함수
-def betting(turn, map, available_betting_point_address):
+def betting(turn, map, available_betting_point_address, is_first_turn):
     human_bet = 0
     last_betting_point = [-1] * 2
     # 사람 차례
@@ -42,9 +42,16 @@ def betting(turn, map, available_betting_point_address):
                         # 마지막 착수점 저장
                         last_betting_point[0] = point[0]
                         last_betting_point[1] = int(human_bet) - 1
-                        return map, True, last_betting_point
-                print("Column " + human_bet + " is already full. Please select another column.")
-                return map, False, last_betting_point
+                        if is_first_turn:
+                            available_betting_point_address.insert(3,[0,4])
+                            is_first_turn = False
+                        return map, True, last_betting_point, is_first_turn, available_betting_point_address
+                if is_first_turn:
+                    print("You can't bet in column 4 at the first turn")
+                else:
+                    print("Column " + human_bet + " is already full. Please select another column.")
+                    print(is_first_turn)
+                return map, False, last_betting_point, is_first_turn, available_betting_point_address
     # 컴퓨터 차례
     else:
         cpu_input = -1
@@ -67,6 +74,9 @@ def betting(turn, map, available_betting_point_address):
         # 마지막 착수점 저장
         last_betting_point[0] = cpu_bet_row
         last_betting_point[1] = cpu_bet_column - 1
+        if is_first_turn:
+            available_betting_point_address.insert(3, [0, 4])
+            is_first_turn = False
         if last_betting_point[0] == 0:
             alphabet = 'A'
         elif last_betting_point[0] == 1:
@@ -80,15 +90,15 @@ def betting(turn, map, available_betting_point_address):
         else:
             alphabet = 'F'
         print("( CPU betted",alphabet+str(cpu_bet_column),")")
-        return map, True, last_betting_point
+        return map, True, last_betting_point, is_first_turn, available_betting_point_address
 
 # 착수할 열을 선택하고 착수 결과를 보여주는 함수
-def gameProgressing(map, turn, state ,available_betting_point_address):
+def gameProgressing(map, turn, state ,available_betting_point_address, is_first_turn):
     success_betting = False
     dot = [['.'] * 7 for i in range(6)]
     print("---------------------------------------")
     while not success_betting:
-        map, success_betting, last_betting_point = betting(turn, map, available_betting_point_address)
+        map, success_betting, last_betting_point, is_first_turn, available_betting_point_address = betting(turn, map, available_betting_point_address, is_first_turn)
     state.append(last_betting_point[1]+1)
     for i in range(6):
         for j in range(7):
@@ -114,4 +124,4 @@ def gameProgressing(map, turn, state ,available_betting_point_address):
     print("State: "+''.join(str(i) for i in state))    # 현재 state 보여주기
 
     turn *= -1  # 턴 바꾸기
-    return map, turn, last_betting_point, state    # 맵, 누구턴인지, 마지막 착수점, state 리턴
+    return map, turn, last_betting_point, state, is_first_turn    # 맵, 누구턴인지, 마지막 착수점, state 리턴

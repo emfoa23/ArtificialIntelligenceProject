@@ -51,11 +51,12 @@ def startGame():
     turn = 0    # 누구 차례인지 알려주는 변수. CPU: -1, 사람: 1
     map = [[0] * 7 for i in range(6)]   # 게임판. 빈칸: 0, CPU가 둔곳: -1, 사람이 둔곳: 1
     state = []  # 게임판의 착수됐던 열들을 알려주는 리스트
+    is_first_turn = True    # 첫 착수임을 알려주는 변수
 
     # 테스트용 코드
     set_intial_state = ''   # 시작 state를 설정해주는 변수
 
-    available_betting_point_address = [[0,1],[0,2],[0,3],[0,4],[0,5],[0,6],[0,7]]   # 착수가능한 위치를 알려주는 리스트
+    available_betting_point_address = [[0,1],[0,2],[0,3],[0,5],[0,6],[0,7]]   # 착수가능한 위치를 알려주는 리스트
     while text_input != 'F' and text_input != 'f' and text_input != 'S' and text_input != 's':
         text_input = input("Will you go First or Second? (F/S) : ")
 
@@ -92,6 +93,7 @@ def startGame():
         if set_intial_state == 'Y' or set_intial_state == 'y':
             state = [int(x) for x in input("Initial State (ex. 4435): ")]
             map, turn = initialMapSetter(map, state, turn)
+            is_first_turn = False
             option = 1
         # 초기 state를 설정하지 않을때
         elif set_intial_state == 'N' or set_intial_state == 'n':
@@ -107,7 +109,7 @@ def startGame():
         print("Available betting point:",available_betting_point_address)   # 배팅가능 포인트 출력
 
         # 게임 진행
-        map, turn, last_betting_point, state = gameProgressing(map, turn, state, available_betting_point_address)
+        map, turn, last_betting_point, state, is_first_turn = gameProgressing(map, turn, state, available_betting_point_address ,is_first_turn)
         # 게임오버 됐는지를 알려주는 함수
         game_over, winner = gameOver(map, last_betting_point, turn)
         if game_over:
