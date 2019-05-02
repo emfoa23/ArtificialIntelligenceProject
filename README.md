@@ -9,3 +9,4 @@ Python을 이용해 개발했습니다.
 ## Reference
 * [Connect Four - Wikipedia](https://en.wikipedia.org/wiki/Connect_Four)
 * [Solving Connect Four - How to build a perfect AI](http://blog.gamesolver.org)
+* [Connect Four Solver](https://connect4.gamesolver.org/en/)
