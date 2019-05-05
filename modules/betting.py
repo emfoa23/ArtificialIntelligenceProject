@@ -1,6 +1,3 @@
-# Import
-from random import randint
-
 # 착수 가능한 곳을 찾아주는 함수
 def declareAvailableBettingPoint(map, available_betting_point_address, option):
     new_available_betting_point_address = []
@@ -22,7 +19,11 @@ def declareAvailableBettingPoint(map, available_betting_point_address, option):
     return new_available_betting_point_address, option
 
 # 선택한 열에 착수하는 함수
-def betting(turn, map, available_betting_point_address, is_first_turn):
+def betting(turn, map, available_betting_point_address, is_first_turn, turn_count):
+    # Import
+    from random import randint
+    from .AI import connect4AI
+
     human_bet = 0
     last_betting_point = [-1] * 2
     # 사람 차례
@@ -50,13 +51,12 @@ def betting(turn, map, available_betting_point_address, is_first_turn):
                     print("You can't bet in column 4 at the first turn")
                 else:
                     print("Column " + human_bet + " is already full. Please select another column.")
-                    print(is_first_turn)
                 return map, False, last_betting_point, is_first_turn, available_betting_point_address
     # 컴퓨터 차례
     else:
         cpu_input = -1
-        while cpu_input != '0' and cpu_input != '1':
-            cpu_input = input("Choose betting method CPU should select. (0 - random / 1 - using AI): ")
+        while cpu_input != '0' and cpu_input != '1' and cpu_input != '2':
+            cpu_input = input("Choose betting method CPU should select. (0 - random / 1 - using AI / 2 - selection): ")
             # 1~7열 사이에 랜덤하게 착수하기
             if int(cpu_input) == 0:
                 random_variable = randint(0, len(available_betting_point_address)-1)
@@ -64,10 +64,15 @@ def betting(turn, map, available_betting_point_address, is_first_turn):
                 cpu_bet_column = available_betting_point_address[random_variable][1]
             # 개발한 알고리즘 사용하기
             elif int(cpu_input) == 1:
-                # connect4AI()
-                random_variable = randint(0, len(available_betting_point_address)-1)
-                cpu_bet_row = available_betting_point_address[random_variable][0]
-                cpu_bet_column = available_betting_point_address[random_variable][1]
+                cpu_bet_row, cpu_bet_column = connect4AI(available_betting_point_address, map, turn, turn_count)
+            elif int(cpu_input) == 2:
+                while int(human_bet) > len(available_betting_point_address) or int(human_bet) < 1:
+                    human_bet = input("Where do you want to bet? (Ex. 1st point, 2nd point) : ")
+                    if int(human_bet) > len(available_betting_point_address) or int(human_bet) < 1:
+                        print("Wrong Input. Please try it again.")
+                    else:
+                        cpu_bet_row = available_betting_point_address[int(human_bet)-1][0]
+                        cpu_bet_column = available_betting_point_address[int(human_bet)-1][1]
             else:
                 print("Wrong Input. Please try it again.")
         map[cpu_bet_row][cpu_bet_column-1] = -1
@@ -93,12 +98,13 @@ def betting(turn, map, available_betting_point_address, is_first_turn):
         return map, True, last_betting_point, is_first_turn, available_betting_point_address
 
 # 착수할 열을 선택하고 착수 결과를 보여주는 함수
-def gameProgressing(map, turn, state ,available_betting_point_address, is_first_turn):
+def gameProgressing(map, turn, state ,available_betting_point_address, is_first_turn, turn_count):
     success_betting = False
     dot = [['.'] * 7 for i in range(6)]
     print("---------------------------------------")
+    print("Turn:",int((turn_count/2)+1))
     while not success_betting:
-        map, success_betting, last_betting_point, is_first_turn, available_betting_point_address = betting(turn, map, available_betting_point_address, is_first_turn)
+        map, success_betting, last_betting_point, is_first_turn, available_betting_point_address = betting(turn, map, available_betting_point_address, is_first_turn, turn_count)
     state.append(last_betting_point[1]+1)
     for i in range(6):
         for j in range(7):
@@ -124,4 +130,5 @@ def gameProgressing(map, turn, state ,available_betting_point_address, is_first_
     print("State: "+''.join(str(i) for i in state))    # 현재 state 보여주기
 
     turn *= -1  # 턴 바꾸기
-    return map, turn, last_betting_point, state, is_first_turn    # 맵, 누구턴인지, 마지막 착수점, state 리턴
+    turn_count += 1
+    return map, turn, last_betting_point, state, is_first_turn, turn_count    # 맵, 누구턴인지, 마지막 착수점, state 리턴

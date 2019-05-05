@@ -1,7 +1,3 @@
-# Import
-from .AI import initialMapSetter
-from .betting import declareAvailableBettingPoint, gameProgressing
-
 # 특정 방향에 같은 수가 연속으로 몇개 존재하는지 찾아내는 함수
 def continuousBetting(map, last_betting_point, row_direction, column_direction, count):
     row_address = last_betting_point[0]
@@ -45,13 +41,19 @@ def gameOver(map, last_betting_point, turn):
     else:
         return False, winner
 
+
 # 게임 실행 함수
 def startGame():
+    # Import
+    from .AI import initialMapSetter
+    from .betting import declareAvailableBettingPoint, gameProgressing
+
     text_input = ''
     turn = 0    # 누구 차례인지 알려주는 변수. CPU: -1, 사람: 1
     map = [[0] * 7 for i in range(6)]   # 게임판. 빈칸: 0, CPU가 둔곳: -1, 사람이 둔곳: 1
     state = []  # 게임판의 착수됐던 열들을 알려주는 리스트
     is_first_turn = True    # 첫 착수임을 알려주는 변수
+    turn_count = 0
 
     # 테스트용 코드
     set_intial_state = ''   # 시작 state를 설정해주는 변수
@@ -93,6 +95,7 @@ def startGame():
         if set_intial_state == 'Y' or set_intial_state == 'y':
             state = [int(x) for x in input("Initial State (ex. 4435): ")]
             map, turn = initialMapSetter(map, state, turn)
+            turn_count = len(state)
             is_first_turn = False
             option = 1
         # 초기 state를 설정하지 않을때
@@ -109,7 +112,7 @@ def startGame():
         print("Available betting point:",available_betting_point_address)   # 배팅가능 포인트 출력
 
         # 게임 진행
-        map, turn, last_betting_point, state, is_first_turn = gameProgressing(map, turn, state, available_betting_point_address ,is_first_turn)
+        map, turn, last_betting_point, state, is_first_turn, turn_count = gameProgressing(map, turn, state, available_betting_point_address ,is_first_turn, turn_count)
         # 게임오버 됐는지를 알려주는 함수
         game_over, winner = gameOver(map, last_betting_point, turn)
         if game_over:
