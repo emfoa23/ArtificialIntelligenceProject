@@ -127,7 +127,7 @@ def gameProgressing(map, turn, state ,available_betting_point_address, is_first_
     print("You: ○ , CPU: ●")
 
     # 테스트용 코드
-    print("State: "+''.join(str(i) for i in state))    # 현재 state 보여주기
+    # print("State: "+''.join(str(i) for i in state))    # 현재 state 보여주기
 
     turn *= -1  # 턴 바꾸기
     turn_count += 1

@@ -109,7 +109,7 @@ def startGame():
         available_betting_point_address, option = declareAvailableBettingPoint(map, available_betting_point_address, option)
 
         # 테스트용 코드
-        print("Available betting point:",available_betting_point_address)   # 배팅가능 포인트 출력
+        # print("Available betting point:",available_betting_point_address)   # 배팅가능 포인트 출력
 
         # 게임 진행
         map, turn, last_betting_point, state, is_first_turn, turn_count = gameProgressing(map, turn, state, available_betting_point_address ,is_first_turn, turn_count)
