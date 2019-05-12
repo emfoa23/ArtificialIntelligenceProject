@@ -41,7 +41,7 @@ def bestScoreFinder(map,turn,turn_count,available_betting_point_address, best_sc
     from .betting import declareAvailableBettingPoint
     import time, math
 
-    time_limit = 3
+    time_limit = 30
     left_time = time_limit-math.floor(time.time() - start_time)
     if left_time <= 0:
         return -100
