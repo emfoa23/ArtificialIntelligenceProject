@@ -54,6 +54,7 @@ def startGame():
     state = []  # 게임판의 착수됐던 열들을 알려주는 리스트
     is_first_turn = True    # 첫 착수임을 알려주는 변수
     turn_count = 0
+    last_betting_point = [-1,-1]
 
     # 테스트용 코드
     set_intial_state = ''   # 시작 state를 설정해주는 변수
@@ -112,7 +113,7 @@ def startGame():
         # print("Available betting point:",available_betting_point_address)   # 배팅가능 포인트 출력
 
         # 게임 진행
-        map, turn, last_betting_point, state, is_first_turn, turn_count = gameProgressing(map, turn, state, available_betting_point_address ,is_first_turn, turn_count)
+        map, turn, last_betting_point, state, is_first_turn, turn_count = gameProgressing(map, turn, state, available_betting_point_address ,is_first_turn, turn_count, last_betting_point)
         # 게임오버 됐는지를 알려주는 함수
         game_over, winner = gameOver(map, last_betting_point, turn)
         if game_over:
