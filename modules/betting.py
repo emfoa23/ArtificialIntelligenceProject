@@ -29,10 +29,6 @@ def betting(turn, map, available_betting_point_address, is_first_turn, turn_coun
     if turn == 1:
         while human_bet != '1' and human_bet != '2' and human_bet != '3' and human_bet != '4' and human_bet != '5' and human_bet != '6' and human_bet != '7':
             human_bet = input("Where do you want to bet? (1~7) : ")
-
-            # 테스트용 코드
-            # human_bet = str(randint(1, 7))    # 사람 차례에도 랜덤하게 두기
-
             if human_bet != '1' and human_bet != '2' and human_bet != '3' and human_bet != '4' and human_bet != '5' and human_bet != '6' and human_bet != '7':
                 print("Wrong Input. Please try it again.")
             else:
@@ -54,30 +50,6 @@ def betting(turn, map, available_betting_point_address, is_first_turn, turn_coun
     # 컴퓨터 차례
     else:
         cpu_bet_row, cpu_bet_column = connect4AI(available_betting_point_address, map, turn, turn_count, state, last_betting_point)
-
-        # 테스트용 코드
-        # cpu_input = -1
-        # while cpu_input != '0' and cpu_input != '1' and cpu_input != '2':
-        #     cpu_input = input("Choose betting method CPU should select. (0 - random / 1 - using AI / 2 - selection): ")
-        #     # 1~7열 사이에 랜덤하게 착수하기
-        #     if int(cpu_input) == 0:
-        #         random_variable = randint(0, len(available_betting_point_address)-1)
-        #         cpu_bet_row = available_betting_point_address[random_variable][0]
-        #         cpu_bet_column = available_betting_point_address[random_variable][1]
-        #     # 개발한 알고리즘 사용하기
-        #     elif int(cpu_input) == 1:
-        #         cpu_bet_row, cpu_bet_column = connect4AI(available_betting_point_address, map, turn, turn_count)
-        #     elif int(cpu_input) == 2:
-        #         while int(human_bet) > len(available_betting_point_address) or int(human_bet) < 1:
-        #             human_bet = input("Where do you want to bet? (Ex. 1st point, 2nd point) : ")
-        #             if int(human_bet) > len(available_betting_point_address) or int(human_bet) < 1:
-        #                 print("Wrong Input. Please try it again.")
-        #             else:
-        #                 cpu_bet_row = available_betting_point_address[int(human_bet)-1][0]
-        #                 cpu_bet_column = available_betting_point_address[int(human_bet)-1][1]
-        #     else:
-        #         print("Wrong Input. Please try it again.")
-
         map[cpu_bet_row][cpu_bet_column-1] = -1
         # 마지막 착수점 저장
         last_betting_point[0] = cpu_bet_row
@@ -132,10 +104,6 @@ def gameProgressing(map, turn, state ,available_betting_point_address, is_first_
     print("# # # # # # # # #")
     print()
     print("You: ○ , CPU: ●")
-
-    # 테스트용 코드
-    # print("State: "+''.join(str(i) for i in state))    # 현재 state 보여주기
-
     turn *= -1  # 턴 바꾸기
     turn_count += 1
     return map, turn, last_betting_point, state, is_first_turn, turn_count    # 맵, 누구턴인지, 마지막 착수점, state 리턴

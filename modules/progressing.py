@@ -55,17 +55,10 @@ def startGame():
     is_first_turn = True    # 첫 착수임을 알려주는 변수
     turn_count = 0
     last_betting_point = [-1,-1]
-
-    # 테스트용 코드
-    set_intial_state = ''   # 시작 state를 설정해주는 변수
-
+    option = 0
     available_betting_point_address = [[0,1],[0,2],[0,3],[0,5],[0,6],[0,7]]   # 착수가능한 위치를 알려주는 리스트
     while text_input != 'F' and text_input != 'f' and text_input != 'S' and text_input != 's':
         text_input = input("Will you go First or Second? (F/S) : ")
-
-        # 테스트용 코드
-        # text_input = 'f'    # 무조건 선공하기
-
         # 사람이 먼저 시작할때
         if text_input == 'F' or text_input == 'f':
             print()
@@ -88,30 +81,9 @@ def startGame():
             break
         else:
             print("Wrong Input. Please try it again.")
-
-    # 테스트용 코드
-    while set_intial_state != 'Y' and set_intial_state != 'y' and set_intial_state != 'N' and set_intial_state != 'n':
-        set_intial_state = input("Do you want to set initial state? (Y/N): ")
-        # 초기 state를 설정할때
-        if set_intial_state == 'Y' or set_intial_state == 'y':
-            state = [int(x) for x in input("Initial State (ex. 4435): ")]
-            map, turn = initialMapSetter(map, state, turn)
-            turn_count = len(state)
-            is_first_turn = False
-            option = 1
-        # 초기 state를 설정하지 않을때
-        elif set_intial_state == 'N' or set_intial_state == 'n':
-            state = []
-            option = 0
-        else:
-            print("Wrong Input. Please try it again.")
     while True:
         # 착수 가능한 곳을 찾아주는 함수
         available_betting_point_address, option = declareAvailableBettingPoint(map, available_betting_point_address, option)
-
-        # 테스트용 코드
-        # print("Available betting point:",available_betting_point_address)   # 배팅가능 포인트 출력
-
         # 게임 진행
         map, turn, last_betting_point, state, is_first_turn, turn_count = gameProgressing(map, turn, state, available_betting_point_address ,is_first_turn, turn_count, last_betting_point)
         # 게임오버 됐는지를 알려주는 함수
