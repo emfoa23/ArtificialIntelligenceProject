@@ -45,7 +45,6 @@ def gameOver(map, last_betting_point, turn):
 # 게임 실행 함수
 def startGame():
     # Import
-    from .AI import initialMapSetter
     from .betting import declareAvailableBettingPoint, gameProgressing
 
     text_input = ''
