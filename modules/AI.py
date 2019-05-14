@@ -5,7 +5,7 @@ def bestScoreFinder(map,turn,turn_count,available_betting_point_address, best_sc
     from .betting import declareAvailableBettingPoint
     import time, math
 
-    time_limit = 30
+    time_limit = 15
     left_time = time_limit-math.floor(time.time() - start_time)
     if left_time <= 0:
         return -100
@@ -59,7 +59,7 @@ def pointFinder(map, turn, turn_count, available_betting_point_address, best_sco
             best_point_address = point
     return best_score, best_point_address
 
-# 률 베이스
+# 룰 베이스
 def ruleBasedSystem(available_betting_point, last_betting_point):
     # 상대방이 착수한 열에 착수
     for x in available_betting_point:
@@ -132,7 +132,7 @@ def connect4AI(available_betting_point_address, map, turn, turn_count, state, la
     background_exist, best_point_address = backgroundExist(state, available_betting_point_address)
     # 첫 4수 이후
     if not background_exist:
-        start_time = time.time()
+        start_time = time.time()    #시간 제한을 15초로 설정
         print("( CPU is thinking now )")
         # 제한시간 동안 minmax algorithm 으로 승리하는 수를 탐색
         best_score, best_point_address = pointFinder(map,turn,turn_count, available_betting_point_address, -21, start_time)
